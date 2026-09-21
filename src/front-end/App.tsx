@@ -12,18 +12,29 @@ export default function App() {
   }, []);
 
   return (
-    <div>
-      <h1>Popular Movies</h1>
+    <main>
+      <header>
+        <h1>Films populaires</h1>
+        <h2>
+          Films tendances en France, d'après les données de <b>The Movie Database</b>
+        </h2>
+      </header>
 
-      {movies ? (
-        <ul>
-          {movies.map((movie) => (
-            <MovieItem key={movie.id} movie={movie} />
-          ))}
-        </ul>
-      ) : (
-        <p>Loading...</p>
-      )}
-    </div>
+      <section>
+        {movies ? (
+          <ul>
+            {movies.map((movie) => (
+              <li key={movie.id}>
+                <article>
+                  <MovieItem movie={movie} />
+                </article>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>Loading...</p>
+        )}
+      </section>
+    </main>
   );
 }
