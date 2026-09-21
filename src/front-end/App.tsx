@@ -1,15 +1,15 @@
-import { useEffect, useState } from "react"
-import type { Movie } from "../back-end/schemas/MoviesTypes"
-import MovieItem from "./components/MovieItem"
+import { useEffect, useState } from "react";
+import type { Movie } from "../back-end/schemas/MoviesTypes";
+import MovieItem from "./components/MovieItem";
 
 export default function App() {
-  const [movies, setMovies] = useState<Movie[] | null>(null)
+  const [movies, setMovies] = useState<Movie[] | null>(null);
 
   useEffect(() => {
     fetch("/api/movies/popular")
       .then((response) => response.json())
-      .then((data) => setMovies(data.results))
-  }, [])
+      .then((data) => setMovies(data.results));
+  }, []);
 
   return (
     <div>
@@ -25,6 +25,5 @@ export default function App() {
         <p>Loading...</p>
       )}
     </div>
-  )
+  );
 }
-
