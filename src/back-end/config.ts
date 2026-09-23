@@ -3,8 +3,6 @@ import dotenv from "dotenv";
 // Charger les variables d'environnement depuis le fichier .env
 dotenv.config();
 
-console.log(process.env);
-
 // Récupérer le token d'accès à l'API TMDB depuis les variables d'environnement
 const tmdbAccessToken: string | undefined = process.env.TMDB_ACCESS_TOKEN;
 
