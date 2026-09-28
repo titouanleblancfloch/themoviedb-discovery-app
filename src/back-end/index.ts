@@ -1,6 +1,7 @@
 import express from "express";
 import { tmdbAccessToken } from "./config";
 import { DEFAULT_LANGUAGE, DEFAULT_PAGE, DEFAULT_REGION } from "./constants";
+import { registerHealthApi } from "./health-api";
 import type { MoviesApiResponse, TmdbMoviesRawResponse } from "./schemas/MoviesTypes";
 import { toSupportedMovie } from "./utils";
 
@@ -15,15 +16,11 @@ app.get("/", (_req: express.Request, res: express.Response) => {
   res.send("Hello World from TypeScript! demo");
 });
 
+registerHealthApi(app);
+
 // Start the server and listen on the specified port
 app.listen(port, () => {
   console.log(`Example app in TypeScript listening on port ${port}`);
-});
-
-// Define a route handler for health check endpoint
-app.get("/api/health", (_req: express.Request, res: express.Response) => {
-  const response: { status: string } = { status: "ok" };
-  res.json(response);
 });
 
 // Define a route handler for fetching popular movies from TMDB API
