@@ -1,5 +1,14 @@
 {
   "name": "themoviedb-discovery-app-demo-2026-2027",
+  "forwardPorts": [3000, 5173],
+  "portsAttributes": {
+    "3000": {
+      "label": "Backend API"
+    },
+    "5173": {
+      "label": "Frontend"
+    }
+  },
   "customizations": {
     "vscode": {
       "extensions": ["mhutchie.git-graph"]
