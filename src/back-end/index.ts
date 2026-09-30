@@ -69,3 +69,63 @@ app.get("/api/movies/popular", async (req: express.Request, res: express.Respons
     res.status(500).json({ error: "Failed to fetch popular movies" });
   }
 });
+
+app.get("/api/movies/:id", async (req: express.Request, res: express.Response) => {
+  try {
+    const { id } = req.params;
+    const { language } = req.query;
+    const queryParams = new URLSearchParams();
+
+    queryParams.append("language", (language as string) || DEFAULT_LANGUAGE);
+
+    const response = await fetch(
+      `https://api.themoviedb.org/3/movie/${id}?${queryParams.toString()}`,
+      {
+        headers: {
+          Authorization: `Bearer ${tmdbAccessToken}`,
+          "Content-Type": "application/json;charset=utf-8",
+        },
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error(`TMDB API request failed with status ${response.status}`);
+    }
+
+    const rawData = (await response.json()) as {
+      backdrop_path: string | null;
+      genres: Array<{ id: number; name: string }>;
+      id: number;
+      original_language: string;
+      original_title: string;
+      overview: string;
+      popularity: number;
+      poster_path: string | null;
+      release_date: string;
+      tagline: string | null;
+      title: string;
+      vote_average: number;
+      vote_count: number;
+    };
+
+    const data = {
+      backdrop_path: rawData.backdrop_path,
+      genres: rawData.genres,
+      id: rawData.id,
+      original_language: rawData.original_language,
+      original_title: rawData.original_title,
+      overview: rawData.overview,
+      popularity: rawData.popularity,
+      poster_path: rawData.poster_path,
+      release_date: rawData.release_date,
+      tagline: rawData.tagline,
+      title: rawData.title,
+      vote_average: rawData.vote_average,
+      vote_count: rawData.vote_count,
+    };
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch movie details" });
+  }
+});
