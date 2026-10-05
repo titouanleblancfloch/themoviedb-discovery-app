@@ -34,6 +34,18 @@
   color: #56627a;
 }
 
+.app-header > a {
+  flex: 0 0 auto;
+  color: #2a6f77;
+  font-size: 15px;
+  font-weight: 700;
+  text-underline-offset: 4px;
+}
+
+.app-header > a:hover {
+  color: #104b58;
+}
+
 .movie-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -272,6 +284,11 @@
   .app-header {
     display: block;
     margin-bottom: 26px;
+  }
+
+  .app-header > a {
+    display: inline-block;
+    margin-top: 16px;
   }
 
   .app-header h1 {

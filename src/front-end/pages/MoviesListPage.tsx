@@ -24,10 +24,13 @@ export default function MoviesListPage() {
   return (
     <main className="app-shell">
       <header className="app-header">
-        <h1>Films populaires</h1>
-        <h2>
-          Films tendances en France, d'après les données de <b>The Movie Database</b>
-        </h2>
+        <div>
+          <h1>Films populaires</h1>
+          <h2>
+            Films tendances en France, d'après les données de <b>The Movie Database</b>
+          </h2>
+        </div>
+        <Link to="/about">À propos</Link>
       </header>
       <section>
         {movies ? (
