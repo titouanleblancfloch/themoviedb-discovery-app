@@ -30,7 +30,6 @@ export default function MoviesListPage() {
             Films tendances en France, d'après les données de <b>The Movie Database</b>
           </h2>
         </div>
-        <Link to="/about">À propos</Link>
       </header>
       <section>
         {movies ? (
