@@ -5,6 +5,10 @@ import { toSupportedMovie } from "./utils";
 
 export function createApp(tmdbAccessToken: string) {
   const app = express();
+  const headers = {
+    Authorization: `Bearer ${tmdbAccessToken}`,
+    "Content-Type": "application/json;charset=utf-8",
+  };
 
   app.get("/", (_req, res) => {
     res.send("Hello World from TypeScript! demo");
@@ -22,15 +26,9 @@ export function createApp(tmdbAccessToken: string) {
         page: typeof page === "string" ? page : DEFAULT_PAGE,
         region: typeof region === "string" ? region : DEFAULT_REGION,
       });
-
       const response = await fetch(
         `https://api.themoviedb.org/3/movie/popular?${queryParams.toString()}`,
-        {
-          headers: {
-            Authorization: `Bearer ${tmdbAccessToken}`,
-            "Content-Type": "application/json;charset=utf-8",
-          },
-        },
+        { headers },
       );
 
       if (!response.ok) {
@@ -58,23 +56,16 @@ export function createApp(tmdbAccessToken: string) {
       const queryParams = new URLSearchParams({
         language: typeof language === "string" ? language : DEFAULT_LANGUAGE,
       });
-
       const response = await fetch(
         `https://api.themoviedb.org/3/movie/${id}?${queryParams.toString()}`,
-        {
-          headers: {
-            Authorization: `Bearer ${tmdbAccessToken}`,
-            "Content-Type": "application/json;charset=utf-8",
-          },
-        },
+        { headers },
       );
 
       if (!response.ok) {
         throw new Error(`TMDB API request failed with status ${response.status}`);
       }
 
-      const rawData = await response.json();
-      res.json(rawData);
+      res.json(await response.json());
     } catch {
       res.status(500).json({ error: "Failed to fetch movie details" });
     }

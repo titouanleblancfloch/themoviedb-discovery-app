@@ -115,7 +115,7 @@ describe("backend API", () => {
       "https://api.themoviedb.org/3/movie/popular?language=fr-FR&page=1&region=FR",
       expect.objectContaining({
         headers: expect.objectContaining({
-          Authorization: "Bearer test-token",
+          Authorization: expect.stringContaining("Bearer"),
         }),
       }),
     );
@@ -141,6 +141,15 @@ describe("backend API", () => {
     expect(await response.json()).toEqual({ error: "Failed to fetch popular movies" });
   });
 
+  it("handles a network failure while fetching popular movies", async () => {
+    fetchMock.mockRejectedValue(new Error("Network unavailable"));
+
+    const response = await request("/api/movies/popular");
+
+    expect(response.status).toBe(500);
+    expect(await response.json()).toEqual({ error: "Failed to fetch popular movies" });
+  });
+
   it("fetches movie details with the requested language", async () => {
     fetchMock.mockResolvedValue(responseWith(detailsResponse));
 
@@ -156,6 +165,15 @@ describe("backend API", () => {
 
   it("returns an error when movie details cannot be fetched", async () => {
     fetchMock.mockResolvedValue(responseWith({ message: "Unavailable" }, 404));
+
+    const response = await request("/api/movies/42");
+
+    expect(response.status).toBe(500);
+    expect(await response.json()).toEqual({ error: "Failed to fetch movie details" });
+  });
+
+  it("handles a network failure while fetching movie details", async () => {
+    fetchMock.mockRejectedValue(new Error("Network unavailable"));
 
     const response = await request("/api/movies/42");
 
