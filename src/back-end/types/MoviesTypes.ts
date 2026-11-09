@@ -23,7 +23,6 @@ export type TmdbMovie = {
   vote_average: number;
   vote_count: number;
 };
-
 export type TmdbMovieDetails = {
   adult: boolean;
   backdrop_path: string | null;
@@ -68,4 +67,9 @@ export type MovieDetails = Omit<
 // TypeScript type for the API response when fetching popular movies, containing an array of supported Movie objects.
 export type ApiErrorResponse = {
   error: string;
+};
+
+export type Country = {
+  code: string;
+  name: string;
 };
