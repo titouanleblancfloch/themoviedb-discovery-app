@@ -114,6 +114,24 @@ describe('movie repository', () => {
     expect(movies).toEqual([]);
   });
 
+  it('uses defaults when optional movie data is absent', () => {
+    // Arrange: omit the optional collection date and relations.
+    const {
+      collected_at: _collectedAt,
+      genres: _genres,
+      production_countries: _productionCountries,
+      ...movie
+    } = createMovie();
+
+    // Act: save the movie without optional values.
+    const savedMovie = upsertMovie(database, movie);
+
+    // Assert: defaults are applied.
+    expect(savedMovie.collected_at).toBeDefined();
+    expect(savedMovie.genres).toEqual([]);
+    expect(savedMovie.production_countries).toEqual([]);
+  });
+
   it('clears relations when an updated movie has no genres or countries', () => {
     // Arrange: insert a movie with relations.
     upsertMovie(database, createMovie());
@@ -132,5 +150,17 @@ describe('movie repository', () => {
       genres: [],
       production_countries: [],
     });
+  });
+
+  it('rolls back when movie data is invalid', () => {
+    // Arrange: prepare invalid data rejected by the database constraint.
+    const movie = createMovie({
+      runtime_minutes: 0,
+    });
+
+    // Act and Assert: the update fails and is rolled back.
+    expect(() => upsertMovie(database, movie)).toThrow();
+
+    expect(findMovieById(database, movie.id)).toBeUndefined();
   });
 });

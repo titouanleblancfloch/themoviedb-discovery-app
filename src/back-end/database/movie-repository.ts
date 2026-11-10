@@ -248,11 +248,5 @@ export function upsertMovie(
     throw error;
   }
 
-  const savedMovie = findMovieById(database, movie.id);
-
-  if (!savedMovie) {
-    throw new Error(`Movie with ID ${movie.id} was not saved`);
-  }
-
-  return savedMovie;
+  return findMovieById(database, movie.id) as StoredMovie;
 }
