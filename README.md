@@ -86,6 +86,24 @@ npx tsx src/back-end/backend-cli.ts create-database --path ./data/ma-base.sqlite
 
 La commande initialise le schéma sans supprimer les données d'une base existante.
 
+Pour importer ou mettre à jour les pays depuis le fichier CSV d'exemple :
+
+```sh
+npx tsx src/back-end/backend-cli.ts add-countries ./data/countries.csv
+```
+
+Pour utiliser une autre base, placez l'option `--path` avant ou après la commande :
+
+```sh
+npx tsx src/back-end/backend-cli.ts --path ./data/custom-movies.sqlite add-countries ./data/countries.csv
+```
+
+Pour supprimer uniquement les pays non associés à un film :
+
+```sh
+npx tsx src/back-end/backend-cli.ts clean-countries
+```
+
 ## API locale
 
 | Méthode | Route                 | Description                                                       |

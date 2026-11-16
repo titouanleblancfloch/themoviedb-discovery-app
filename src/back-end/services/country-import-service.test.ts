@@ -51,6 +51,9 @@ describe('country import service', () => {
     expect(() => parseCountriesCsv('code,name\nFRA,France')).toThrow(
       'expected two uppercase letters',
     );
+    expect(() => parseCountriesCsv('code,name\nFR,France,Extra')).toThrow(
+      'Invalid countries CSV',
+    );
     expect(() => parseCountriesCsv('code,name\nFR,')).toThrow('name is empty');
     expect(() => parseCountriesCsv('code,name\n"FR,France')).toThrow(
       'Invalid countries CSV',

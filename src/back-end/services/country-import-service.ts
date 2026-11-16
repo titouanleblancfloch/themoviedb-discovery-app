@@ -9,12 +9,11 @@ export function parseCountriesCsv(content: string): Country[] {
     rows = parse(content, {
       bom: true,
       skip_empty_lines: true,
+      relax_column_count: true,
       trim: true,
     }) as string[][];
   } catch (error) {
-    throw new Error(
-      `Invalid countries CSV: ${error instanceof Error ? error.message : String(error)}`,
-    );
+    throw new Error(`Invalid countries CSV: ${String(error)}`);
   }
 
   if (rows.length === 0) {
