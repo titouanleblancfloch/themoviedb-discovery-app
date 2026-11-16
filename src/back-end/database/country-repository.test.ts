@@ -1,6 +1,7 @@
 import { DatabaseSync } from 'node:sqlite';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
+  deleteUnusedCountries,
   findAllCountries,
   findCountryByCode,
   upsertCountries,
@@ -148,5 +149,34 @@ describe('country repository', () => {
       name: 'French Republic',
     });
     expect(findAllCountries(database)).toHaveLength(1);
+  });
+
+  it('deletes only countries without a movie association', () => {
+    // Arrange: store one used and one unused country with a movie relation.
+    upsertCountries(database, [
+      { code: 'FR', name: 'France' },
+      { code: 'US', name: 'United States' },
+    ]);
+    database
+      .prepare(
+        `INSERT INTO movies (
+          id, title, original_title, original_language, overview, collected_at
+        ) VALUES (?, ?, ?, ?, ?, ?)`,
+      )
+      .run(1, 'Movie', 'Movie', 'en', 'Overview', '2026-01-01');
+    database
+      .prepare(
+        'INSERT INTO production_countries (movie_id, country_code) VALUES (?, ?)',
+      )
+      .run(1, 'FR');
+
+    // Act: remove countries that are not referenced by a movie.
+    const deleted = deleteUnusedCountries(database);
+
+    // Assert: only the unused country is deleted.
+    expect(deleted).toBe(1);
+    expect(findAllCountries(database)).toEqual([
+      { code: 'FR', name: 'France' },
+    ]);
   });
 });
