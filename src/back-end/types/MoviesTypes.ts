@@ -23,7 +23,6 @@ export type TmdbMovie = {
   vote_average: number;
   vote_count: number;
 };
-
 export type TmdbMovieDetails = {
   adult: boolean;
   backdrop_path: string | null;
@@ -72,5 +71,10 @@ export type ApiErrorResponse = {
 
 export type Genre = {
   id: number;
+  name: string;
+};
+
+export type Country = {
+  code: string;
   name: string;
 };
