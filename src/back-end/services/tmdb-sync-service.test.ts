@@ -18,6 +18,7 @@ describe('TMDB sync service', () => {
   afterEach(() => {
     database.close();
     vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
   });
 
   it('updates genres, countries, and movies from TMDB APIs', async () => {
@@ -113,6 +114,7 @@ describe('TMDB sync service', () => {
       .mockResolvedValueOnce(new Response(JSON.stringify([])))
       .mockResolvedValueOnce(new Response(JSON.stringify([])));
     vi.stubGlobal('fetch', fetcher);
+    vi.stubEnv('TMDB_ACCESS_TOKEN', 'test-token');
 
     // Act: synchronize reference data with the default options.
     const result = await syncTmdbData(database, []);
@@ -136,5 +138,17 @@ describe('TMDB sync service', () => {
       }),
     ).rejects.toThrow('TMDB API request failed with status 503');
     expect(findMovieById(database, 1)).toBeUndefined();
+  });
+
+  it('rejects synchronization when no access token is configured', async () => {
+    // Arrange: remove the environment token and provide a fetcher that must not run.
+    vi.stubEnv('TMDB_ACCESS_TOKEN', '');
+    const fetcher = vi.fn<typeof fetch>();
+
+    // Act and Assert: fail before making any TMDB request.
+    await expect(syncTmdbData(database, [], { fetcher })).rejects.toThrow(
+      'TMDB_ACCESS_TOKEN is not defined in the environment variables.',
+    );
+    expect(fetcher).not.toHaveBeenCalled();
   });
 });

@@ -2,7 +2,6 @@ import type { DatabaseSync } from 'node:sqlite';
 import { upsertCountries } from '../database/country-repository.ts';
 import { upsertGenres } from '../database/genre-repository.ts';
 import { type MovieInput, upsertMovie } from '../database/movie-repository.ts';
-import { tmdbAccessToken } from '../utils/config.ts';
 import type { TmdbMovieDetails } from '../types/MoviesTypes.ts';
 
 const TMDB_API_BASE_URL = 'https://api.themoviedb.org/3';
@@ -86,7 +85,13 @@ export async function syncTmdbData(
   movieIds: Iterable<number>,
   options: SyncOptions = {},
 ): Promise<SyncResult> {
-  const accessToken = options.accessToken ?? tmdbAccessToken;
+  const accessToken = options.accessToken ?? process.env.TMDB_ACCESS_TOKEN;
+  if (!accessToken) {
+    throw new Error(
+      'TMDB_ACCESS_TOKEN is not defined in the environment variables.',
+    );
+  }
+
   const fetcher = options.fetcher ?? globalThis.fetch;
   const ids = [...movieIds];
 
