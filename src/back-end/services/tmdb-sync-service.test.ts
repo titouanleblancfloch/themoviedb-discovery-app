@@ -17,6 +17,7 @@ describe('TMDB sync service', () => {
 
   afterEach(() => {
     database.close();
+    vi.unstubAllGlobals();
   });
 
   it('updates genres, countries, and movies from TMDB APIs', async () => {
@@ -39,7 +40,7 @@ describe('TMDB sync service', () => {
             original_title: 'The Matrix',
             original_language: 'en',
             overview: 'A computer hacker discovers the truth.',
-            release_date: '1999-03-31',
+            release_date: '',
             popularity: 100,
             vote_average: 8.7,
             vote_count: 1000,
@@ -103,6 +104,22 @@ describe('TMDB sync service', () => {
         }),
       }),
     );
+  });
+
+  it('uses the default token and fetcher when no movies are requested', async () => {
+    // Arrange: provide only the two shared reference-data responses.
+    const fetcher = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(new Response(JSON.stringify([])))
+      .mockResolvedValueOnce(new Response(JSON.stringify([])));
+    vi.stubGlobal('fetch', fetcher);
+
+    // Act: synchronize reference data with the default options.
+    const result = await syncTmdbData(database, []);
+
+    // Assert: the default fetcher is used and no movie is requested.
+    expect(result).toEqual({ movies: 0, genres: 0, countries: 0 });
+    expect(fetcher).toHaveBeenCalledTimes(2);
   });
 
   it('stops synchronization when a TMDB request fails', async () => {
