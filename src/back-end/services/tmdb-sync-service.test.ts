@@ -2,7 +2,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { findCountryByCode } from '../database/country-repository.ts';
 import { findGenreById } from '../database/genre-repository.ts';
-import { findMovieById } from '../database/movie-repository.ts';
+import { findMovieById, upsertMovie } from '../database/movie-repository.ts';
 import { initializeSchema } from '../database/schema.ts';
 import { syncTmdbData } from './tmdb-sync-service.ts';
 
@@ -53,6 +53,25 @@ describe('TMDB sync service', () => {
           }),
         ),
       );
+
+    upsertMovie(database, {
+      id: 1,
+      title: 'Old title',
+      original_title: 'Old title',
+      original_language: 'en',
+      overview: 'Old overview',
+      release_date: '1999-03-31',
+      popularity: 1,
+      vote_average: 1,
+      vote_count: 1,
+      poster_path: null,
+      backdrop_path: null,
+      runtime_minutes: 90,
+      budget: 1,
+      revenue: 1,
+      genres: [{ id: 18, name: 'Drama' }],
+      production_countries: [{ code: 'FR', name: 'France' }],
+    });
 
     // Act: synchronize one movie and the shared reference data.
     const result = await syncTmdbData(database, [1], {
