@@ -1,4 +1,4 @@
-.movies-count-widget {
+.dashboard-widget {
   min-width: 0;
   padding: 20px 24px;
   border: 1px solid var(--line);
@@ -6,7 +6,7 @@
   background: var(--surface);
 }
 
-.movies-count-widget-title {
+.dashboard-widget-title {
   margin: 0 0 12px;
   color: var(--text-muted);
   font-size: 0.82rem;
@@ -15,21 +15,37 @@
   text-transform: uppercase;
 }
 
-.movies-count-widget-value {
+.dashboard-widget-value {
   margin: 0;
   color: var(--text-secondary);
   font-size: 1.05rem;
   overflow-wrap: anywhere;
 }
 
-.movies-count-widget-value strong {
+.dashboard-widget-value strong {
   color: var(--heading);
   font-size: 2.4rem;
   line-height: 1.1;
 }
 
-.movies-count-widget-unavailable {
+.dashboard-widget-message {
   margin: 0;
   color: var(--text-muted);
   font-style: italic;
+}
+
+.dashboard-widget-error {
+  color: var(--accent);
+  font-style: normal;
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .dashboard-widget {
+    padding: 16px 18px;
+  }
+
+  .dashboard-widget-value strong {
+    font-size: 2rem;
+  }
 }
