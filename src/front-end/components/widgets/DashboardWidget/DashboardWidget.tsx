@@ -17,12 +17,15 @@ interface DashboardWidgetProps {
   status: DashboardWidgetStatus;
   /** Content displayed when the status is `ready`. */
   children?: ReactNode;
+  /** Message displayed when the status is `empty`. */
+  emptyMessage?: string;
 }
 
 export default function DashboardWidget({
   title,
   status,
   children,
+  emptyMessage = 'Donnée indisponible',
 }: DashboardWidgetProps) {
   const titleId = useId();
 
@@ -42,7 +45,7 @@ export default function DashboardWidget({
         </p>
       )}
       {status === 'empty' && (
-        <p className="dashboard-widget-message">Donnée indisponible</p>
+        <p className="dashboard-widget-message">{emptyMessage}</p>
       )}
       {status === 'error' && (
         <p
