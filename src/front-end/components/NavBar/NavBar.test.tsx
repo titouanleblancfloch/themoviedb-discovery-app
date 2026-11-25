@@ -35,6 +35,25 @@ describe('NavBar', () => {
     expect(aboutLink.getAttribute('aria-current')).toBeNull();
   });
 
+  it('marks Tableau de bord active on the dashboard route', () => {
+    // Arrange: render the navigation on its dashboard destination.
+
+    // Act
+    renderNavBar('/dashboard');
+
+    // Assert: the dashboard link points to its page and is the current one.
+    const dashboardLink = screen.getByRole('link', {
+      name: 'Tableau de bord',
+    });
+    expect(dashboardLink.getAttribute('href')).toBe('/dashboard');
+    expect(dashboardLink.getAttribute('aria-current')).toBe('page');
+    expect(
+      screen
+        .getByRole('link', { name: 'Films populaires' })
+        .getAttribute('aria-current'),
+    ).toBeNull();
+  });
+
   it('marks À propos active on the about route', () => {
     // Arrange: render the navigation on its about destination.
 
