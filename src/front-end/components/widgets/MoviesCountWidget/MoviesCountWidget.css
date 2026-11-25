@@ -1,0 +1,35 @@
+.movies-count-widget {
+  min-width: 0;
+  padding: 20px 24px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.movies-count-widget-title {
+  margin: 0 0 12px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.movies-count-widget-value {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  overflow-wrap: anywhere;
+}
+
+.movies-count-widget-value strong {
+  color: var(--heading);
+  font-size: 2.4rem;
+  line-height: 1.1;
+}
+
+.movies-count-widget-unavailable {
+  margin: 0;
+  color: var(--text-muted);
+  font-style: italic;
+}
