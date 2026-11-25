@@ -1,8 +1,13 @@
 // @vitest-environment jsdom
 
 import { cleanup, render, screen } from '@testing-library/react';
+import { composeStories } from '@storybook/react-vite';
 import { afterEach, describe, expect, it } from 'vitest';
 import MoviesCountWidget from './MoviesCountWidget';
+import * as stories from './MoviesCountWidget.stories';
+
+const { Default, LargeCount, SingleMovie, Empty, Unavailable, DarkTheme } =
+  composeStories(stories);
 
 afterEach(cleanup);
 
@@ -42,5 +47,26 @@ describe('MoviesCountWidget', () => {
     // Assert: unknown data is not displayed as zero.
     expect(getValueText()).toBe('Donnée indisponible');
     expect(screen.queryByText('0')).toBeNull();
+  });
+});
+
+describe('MoviesCountWidget stories', () => {
+  it('renders each Storybook state with its expected value', () => {
+    // Arrange: pair each story with the text it must display.
+    const expectedStates = [
+      { Story: Default, text: '1 248 films' },
+      { Story: LargeCount, text: '1 234 567 films' },
+      { Story: SingleMovie, text: '1 film' },
+      { Story: Empty, text: '0 film' },
+      { Story: Unavailable, text: 'Donnée indisponible' },
+      { Story: DarkTheme, text: '1 248 films' },
+    ];
+
+    // Act and assert: every story renders the widget in its own state.
+    for (const { Story, text } of expectedStates) {
+      const { unmount } = render(<Story />);
+      expect(getValueText()).toBe(text);
+      unmount();
+    }
   });
 });
