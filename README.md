@@ -104,6 +104,26 @@ Pour supprimer uniquement les pays non associés à un film :
 npx tsx src/back-end/backend-cli.ts clean-countries
 ```
 
+Pour importer ou mettre à jour les genres depuis le fichier CSV d'exemple :
+
+```sh
+npx tsx src/back-end/backend-cli.ts add-genres ./data/genres.csv
+```
+
+Le fichier doit contenir exactement les colonnes `id` et `name`, dans n'importe quel ordre et sans tenir compte de la casse. Les identifiants doivent être des entiers positifs et les noms ne peuvent pas être vides. Le fichier est validé avant l'ouverture de la base, et l'import est annulé entièrement en cas d'erreur.
+
+Comme pour les pays, l'option `--path` permet de cibler une autre base :
+
+```sh
+npx tsx src/back-end/backend-cli.ts add-genres ./data/genres.csv --path ./data/custom-movies.sqlite
+```
+
+Pour supprimer uniquement les genres non associés à un film :
+
+```sh
+npx tsx src/back-end/backend-cli.ts clean-genres
+```
+
 ## API locale
 
 | Méthode | Route                 | Description                                                       |
