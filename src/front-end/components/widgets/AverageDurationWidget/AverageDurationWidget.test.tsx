@@ -1,8 +1,13 @@
 // @vitest-environment jsdom
 
 import { cleanup, render, screen } from '@testing-library/react';
+import { composeStories } from '@storybook/react-vite';
 import { afterEach, describe, expect, it } from 'vitest';
 import AverageDurationWidget from './AverageDurationWidget';
+import * as stories from './AverageDurationWidget.stories';
+
+const { Default, Loading, NoData, ErrorState, Mobile, DarkTheme } =
+  composeStories(stories);
 
 afterEach(cleanup);
 
@@ -63,5 +68,26 @@ describe('AverageDurationWidget', () => {
     expect(screen.getByRole('alert').textContent).toBe(
       'Impossible de charger la donnée',
     );
+  });
+});
+
+describe('AverageDurationWidget stories', () => {
+  it('renders each Storybook state with its expected content', () => {
+    // Arrange: pair each story with the text it must display.
+    const expectedStates = [
+      { Story: Default, text: '107 min' },
+      { Story: Loading, text: 'Chargement…' },
+      { Story: NoData, text: 'Donnée indisponible' },
+      { Story: ErrorState, text: 'Impossible de charger la donnée' },
+      { Story: Mobile, text: '107 min' },
+      { Story: DarkTheme, text: '107 min' },
+    ];
+
+    // Act and assert: every story renders the widget in its own state.
+    for (const { Story, text } of expectedStates) {
+      const { unmount } = render(<Story />);
+      expect(getWidgetText()).toBe(text);
+      unmount();
+    }
   });
 });
