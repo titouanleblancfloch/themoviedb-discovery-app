@@ -55,6 +55,21 @@ describe('DashboardWidget', () => {
     expect(screen.queryByText('0')).toBeNull();
   });
 
+  it('uses a custom message for the empty state when provided', () => {
+    // Arrange and act: render an empty widget with a specific message.
+    render(
+      <DashboardWidget
+        title="Mon indicateur"
+        status="empty"
+        emptyMessage="Aucune note disponible"
+      />,
+    );
+
+    // Assert: the custom message replaces the default one.
+    expect(screen.getByText('Aucune note disponible')).toBeTruthy();
+    expect(screen.queryByText('Donnée indisponible')).toBeNull();
+  });
+
   it('alerts the user when the value cannot be loaded', () => {
     // Arrange and act: render a widget in error.
     render(
