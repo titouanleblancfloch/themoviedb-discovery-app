@@ -62,6 +62,34 @@ Le composant [HelloWorld](./src/front-end/components/HelloWorld/HelloWorld.tsx) 
 
 Pour ajouter un composant, créez ses fichiers `NomDuComposant.stories.tsx` et `NomDuComposant.test.tsx` à côté de celui-ci dans `src/front-end/`. Utilisez les types `Meta` et `StoryObj` de Storybook pour les stories et vérifiez les sorties visibles avec les requêtes accessibles de React Testing Library.
 
+### Stories des widgets du tableau de bord
+
+Les widgets du [tableau de bord](./src/front-end/pages/DashboardPage/DashboardPage.tsx) suivent les mêmes conventions, afin d'être visualisés et validés dans Storybook avant leur intégration dans la page :
+
+- Placez chaque widget dans son propre dossier `src/front-end/components/widgets/NomDuWidget/`, avec `NomDuWidget.tsx`, `NomDuWidget.css`, `NomDuWidget.stories.tsx` et `NomDuWidget.test.tsx`.
+- Utilisez le titre `Widgets/NomDuWidget` dans le `Meta` des stories pour regrouper tous les widgets dans la barre latérale de Storybook.
+- Le widget reçoit ses données déjà calculées par ses props : il les affiche sans les recalculer et sans appeler l'API. Les stories passent donc des données fictives au composant.
+- Créez une story par état visible du widget, par exemple la valeur nominale, la donnée absente (à distinguer d'une valeur à zéro), un texte long ou un poster manquant.
+- Vérifiez ces mêmes états dans `NomDuWidget.test.tsx`, avec les requêtes accessibles de React Testing Library.
+
+Exemple de structure de stories :
+
+```tsx
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import NomDuWidget from './NomDuWidget';
+
+const meta = {
+  title: 'Widgets/NomDuWidget',
+  component: NomDuWidget,
+} satisfies Meta<typeof NomDuWidget>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = { args: { value: 42 } };
+export const MissingData: Story = { args: { value: null } };
+```
+
 Pour générer une version statique de Storybook :
 
 ```sh
