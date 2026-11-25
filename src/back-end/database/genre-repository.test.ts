@@ -1,6 +1,7 @@
 import { DatabaseSync } from 'node:sqlite';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
+  deleteUnusedGenres,
   findAllGenres,
   findGenreById,
   upsertGenres,
@@ -155,5 +156,30 @@ describe('genre repository', () => {
         .prepare('INSERT INTO genres (id, name) VALUES (?, ?)')
         .run(28, null);
     }).toThrow();
+  });
+
+  it('deletes only genres without a movie association', () => {
+    // Arrange: store one used and one unused genre with a movie relation.
+    upsertGenres(database, [
+      { id: 28, name: 'Action' },
+      { id: 35, name: 'Comedy' },
+    ]);
+    database
+      .prepare(
+        `INSERT INTO movies (
+          id, title, original_title, original_language, overview, collected_at
+        ) VALUES (?, ?, ?, ?, ?, ?)`,
+      )
+      .run(1, 'Movie', 'Movie', 'en', 'Overview', '2026-01-01');
+    database
+      .prepare('INSERT INTO movie_genres (movie_id, genre_id) VALUES (?, ?)')
+      .run(1, 28);
+
+    // Act: remove genres that are not referenced by a movie.
+    const deleted = deleteUnusedGenres(database);
+
+    // Assert: only the unused genre is deleted.
+    expect(deleted).toBe(1);
+    expect(findAllGenres(database)).toEqual([{ id: 28, name: 'Action' }]);
   });
 });
